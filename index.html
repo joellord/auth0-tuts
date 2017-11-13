@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Auth0 testing</title>
+</head>
+<body>
+    <div id="app" style="visibility: hidden">
+        Hello World !  You are logged in!
+        <button id="logout">Logout</button>
+    </div>
+
+    <div id="logged-out" style="visibility: hidden">
+        <div>Please login to access this amazing application</div>
+        <button id="login">Login</button>
+    </div>
+
+<script src="https://cdn.auth0.com/js/auth0/8.10.1/auth0.min.js"></script>
+<script type="text/javascript">
+
+    const AUTH0 = {
+        domain: "joellord.auth0.com",
+        clientId: "7zAqY7aqkve0zvFyRIfZCjW34ncmPbcm",
+        clientSecret: "bLb-5JoFidQNRtnnU8tm57xyhIZjrGG1c5hOGHdJQQVKijITQ3aKInM6mHMofsVL",
+    };
+
+    let webAuth;
+
+    window.addEventListener("load", function() {
+        webAuth = new auth0.WebAuth({
+            domain: 'joellord.auth0.com',
+            clientID: '7zAqY7aqkve0zvFyRIfZCjW34ncmPbcm',
+            responseType: 'token id_token',
+            audience: 'https://joellord.auth0.com/userinfo',
+            scope: 'openid',
+            redirectUri: window.location.href
+        });
+
+        webAuth.parseHash(function(err, authResult) {
+//            if (err) {
+//                console.log(err);
+//                return;
+//            }
+            if (authResult && authResult.accessToken && authResult.idToken) {
+                document.querySelector("#app").style.visibility = "visible";
+            } else {
+                document.querySelector("#logged-out").style.visibility = "visible";
+            }
+        });
+    });
+
+
+    const loginBtn = document.getElementById('login');
+    loginBtn.addEventListener('click', function(e) {
+        webAuth.authorize();
+    });
+
+    const logoutBtn = document.getElementById("logout");
+    logoutBtn.addEventListener("click", function(e) {
+        webAuth.logout();
+    });
+
+</script>
+</body>
+</html>
